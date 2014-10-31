@@ -5,8 +5,9 @@ Gruntfile
 ##使用步骤
 - 1.安装npm以及node.js,http://www.nodejs.org/
 - 2.下载grunt-cli及grunt,http://www.gruntjs.net/docs/getting-started/
-- 3.修改grunt.config.json中的js,css修改为你需要操作的路径（默认view所有）
-- 3.根目录运行grunt命令
+- 3.下载本目录中文件，将其放置在laravel根目录
+- 4.修改grunt.config.json中的js,css修改为你需要操作的路径（默认view所有）
+- 5.根目录运行grunt命令
 
 
 ##简要说明
