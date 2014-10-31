@@ -5,7 +5,7 @@ Gruntfile
 ##使用步骤
 - 1.安装npm以及node.js,http://www.nodejs.org/
 - 2.下载grunt-cli及grunt,http://www.gruntjs.net/docs/getting-started/
-- 3.修改grunt.config.json中的js,css修改为你需要操作的路径，默认是每次修改编译所有view文件夹下的静态资源
+- 3.修改grunt.config.json中的js,css修改为你需要操作的路径（默认view所有）
 - 3.根目录运行grunt命令
 
 
