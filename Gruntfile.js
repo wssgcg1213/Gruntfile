@@ -1,23 +1,21 @@
 module.exports = function(grunt) {
   grunt.initConfig({
-  	pkg: grunt.file.readJSON('package.json'),
+  	config: grunt.file.readJSON('grunt.config.json'),
 
     //js压缩美化
   	uglify: {
   		options: {
-  			banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+  			banner: '/*! <%= config.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
   		},
   		compress: {
   			files: [
           {
             expand: true,
             filter: 'isFile',
-            src: 'app/views/**/*.js',
+            src: '<%= config.js %>',
             dest: 'public/js/',
             rename: function(dest,src){
-                var sIndex = src.lastIndexOf('/'),
-                    fIndex = src.lastIndexOf('.')
-                return dest + src.slice(sIndex,fIndex) + '.min.js';
+                return dest + src.slice(src.lastIndexOf('/'));
             }
           }
         ]
@@ -30,7 +28,7 @@ module.exports = function(grunt) {
           {
             expand: true,
             filter: 'isFile',
-            src: "app/views/**/*.js"
+            src: '<%= config.js %>'
           }
         ]
       }
@@ -38,7 +36,7 @@ module.exports = function(grunt) {
 
     //js强制检测
     jshint: {
-      files: ['app/views/**/*.js'],
+      files: ['<%= config.js %>'],
         options: {
           globals: {
             jQuery: true,
@@ -55,12 +53,10 @@ module.exports = function(grunt) {
           {
             expand: true,
             filter: 'isFile',
-            src: 'app/views/**/*.css',
+            src: '<%= config.css %>',
             dest: 'public/css/',
             rename: function(dest,src){
-                var sIndex = src.lastIndexOf('/'),
-                    fIndex = src.lastIndexOf('.')
-                return dest + src.slice(sIndex,fIndex) + '.min.css';
+                return dest + src.slice(src.lastIndexOf('/'));
             }
           }
         ]
@@ -73,10 +69,13 @@ module.exports = function(grunt) {
        options: {
         spawn: false,
       },
-      files: ['app/views/**/*.js'],
+      files: ['<%= config.js %>','<%= config.css %>'],
       tasks: ['uglify','jshint','cssmin']
     },
 
+  });
+
+  grunt.event.on('watch', function(action, filepath, target) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
