@@ -75,9 +75,6 @@ module.exports = function(grunt) {
 
   });
 
-  grunt.event.on('watch', function(action, filepath, target) {
-  });
-
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
