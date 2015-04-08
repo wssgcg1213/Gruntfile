@@ -32,7 +32,6 @@ module.exports = function(grunt) {
         if(config.js.uglify){
             watchTasks.push('uglify');
             console.log('uglify enabled');
-            if(config.js.beatify)console.log('uglify.beautify enabled');
             configObj.uglify = {
                 options: {
                     banner: '/*! <%= config.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -48,11 +47,14 @@ module.exports = function(grunt) {
                             rename: rename
                         }
                     ]
-                },
-                beatify: {
+                }
+            };
+
+            if(config.js.uglify && config.js.beautify){
+                console.log('uglify.beautify enabled');
+                configObj.uglify.beautify = {
                     options: {
-                        //beautify: true
-                        beautify: config.js.beautify
+                        beautify: true
                     },
                     files: [
                         {
@@ -61,7 +63,7 @@ module.exports = function(grunt) {
                             src: config.js.src
                         }
                     ]
-                }
+                };
             }
         }
 
