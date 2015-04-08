@@ -43,7 +43,7 @@ module.exports = function(grunt) {
                             filter: 'isFile',
                             src: config.js.src,
                             dest: config.js.dist,
-                            ext: config.js.ext ? ".min.js" : undefined,
+                            ext: config.js.ext ? ".min.js" : ".js",
                             rename: rename
                         }
                     ]
@@ -97,7 +97,7 @@ module.exports = function(grunt) {
                             cwd: "",
                             src: config.css.src,
                             dest: config.css.dist,
-                            ext: config.css.ext ? ".min.css" : undefined,
+                            ext: config.css.ext ? ".min.css" : ".css",
                             rename: rename
                         }
                     ]
