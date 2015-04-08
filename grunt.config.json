@@ -1,5 +1,24 @@
 {
-	"name": "Vector",
-	"js": ["app/views/**/*.js"],
-	"css": ["app/views/**/*.css"]
+	"name": "Ling",
+	"html": {
+	  "src": ["src/*.html"],
+	  "dist": "dist/"
+	},
+	"js": {
+	  "src": ["src/lib/*.js", "src/lib/!*.min.js"],
+	  "dist": "dist/lib/",
+	  "uglify": true,
+	  "beautify": false,
+	  "jshint": false
+	},
+	"css": {
+	  "src": ["src/css/*.css", "src/css/!*.min.css"],
+	  "dist": "dist/css/",
+	  "cssmin": true
+	},
+  	"img": {
+	  "src": "src/img/*.{jpg,png,gif}",
+	  "dist": "dist/img/",
+	  "imagemin": true
+	}
 }

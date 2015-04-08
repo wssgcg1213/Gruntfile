@@ -1,85 +1,147 @@
 module.exports = function(grunt) {
-  grunt.initConfig({
-  	config: grunt.file.readJSON('grunt.config.json'),
+    var config = grunt.file.readJSON('grunt.config.json'),
+        watchTasks = [], watchFiles = [],
+        configObj = {config: config};
 
-    //js压缩美化
-  	uglify: {
-  		options: {
-  			banner: '/*! <%= config.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-  		},
-  		compress: {
-  			files: [
-          {
-            expand: true,
-            filter: 'isFile',
-            src: '<%= config.js %>',
-            dest: 'public/js/',
-            rename: function(dest,src){
-                return dest + src.slice(src.lastIndexOf('/'));
+    function rename(dest, src) {
+        return dest + src.slice(src.lastIndexOf('/'));
+    }
+
+    if(config.html){
+        watchFiles.push(config.html.src);
+        watchTasks.push('copy');
+        configObj.copy = {
+            html: {
+                files: [
+                    // includes files within path
+                    {
+                        expand: true,
+                        src: config.html.src,
+                        dest: config.html.dist,
+                        filter: 'isFile',
+                        rename: rename
+                    },
+                ]
             }
-          }
-        ]
-  		},
-      beatify: {
-        options: {
-          beautify: true
-        },
-        files: [
-          {
-            expand: true,
-            filter: 'isFile',
-            src: '<%= config.js %>'
-          }
-        ]
-      }
-  	},
-
-    //js强制检测
-    jshint: {
-      files: ['<%= config.js %>'],
-        options: {
-          globals: {
-            jQuery: true,
-            console: true,
-            module: true
-          }
+        };
+    }
+    //js
+    if(config.js){
+        //js压缩美化
+        watchFiles.push(config.js.src);
+        if(config.js.uglify){
+            watchTasks.push('uglify');
+            console.log('uglify enabled');
+            if(config.js.beatify)console.log('uglify.beautify enabled');
+            configObj.uglify = {
+                options: {
+                    banner: '/*! <%= config.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+                },
+                compress: {
+                    files: [
+                        {
+                            expand: true,
+                            filter: 'isFile',
+                            src: config.js.src,
+                            dest: config.js.dist,
+                            ext: ".min.js",
+                            rename: rename
+                        }
+                    ]
+                },
+                beatify: {
+                    options: {
+                        //beautify: true
+                        beautify: config.js.beautify
+                    },
+                    files: [
+                        {
+                            expand: true,
+                            filter: 'isFile',
+                            src: config.js.src
+                        }
+                    ]
+                }
+            }
         }
-      },
 
-    //css压缩
-    cssmin: {
-      compress: {
-        files: [
-          {
-            expand: true,
-            filter: 'isFile',
-            src: '<%= config.css %>',
-            dest: 'public/css/',
-            rename: function(dest,src){
-                return dest + src.slice(src.lastIndexOf('/'));
-            }
-          }
-        ]
-      }
-    },
+        if(config.js.jshint){
+            console.log('jshint enabled');
+            configObj.jshint = {
+                files: ['<%= config.js.src %>'],
+                options: {
+                    globals: {
+                        jQuery: true,
+                        console: true,
+                        module: true
+                    }
+                }
+            };
+        }
 
+    }
 
-    //文件修改监控
-    watch: {
-       options: {
-        spawn: false,
-      },
-      files: ['<%= config.js %>','<%= config.css %>'],
-      tasks: ['uglify','jshint','cssmin']
-    },
+    //css
+    if(config.css){
+        watchFiles.push(config.css.src);
+        if(config.css.cssmin){
+            watchTasks.push('cssmin');
+            console.log('cssmin enabled');
+            configObj.cssmin = {
+                compress: {
+                    files: [
+                        {
+                            expand: true,
+                            cwd: "",
+                            src: config.css.src,
+                            dest: config.css.dist,
+                            ext: '.min.css',
+                            rename: rename
+                        }
+                    ]
+                }
+            };
+        }//end if
+    }
 
-  });
+    //img
+    if(config.img){
+        watchFiles.push(config.img.src);
+        if(config.img.imagemin){
+            watchTasks.push('imagemin');
+            console.log('imagemin enabled');
+            configObj.imagemin = {                          // Task
+                dynamic: {                         // Another target
+                    files: [{
+                        expand: true,                  // Enable dynamic expansion
+                        cwd: '',                   // Src matches are relative to this path
+                        src: config.img.src,   // Actual patterns to match
+                        dest: config.img.dist,                 // Destination path prefix
+                        rename: rename
+                    }]
+                }
+            };
+        }
+    }
 
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
+    configObj.watch = {
+        options: {
+            spawn: false,
+        },
+        files: watchFiles,
+        tasks: watchTasks
+    };
 
-  grunt.registerTask('default', ['watch']);
-  
+    //important
+    grunt.initConfig(configObj);
+
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
+    var _tasks = watchTasks.slice();
+    _tasks.push('watch');
+    grunt.registerTask('default', _tasks);
 };
