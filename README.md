@@ -2,6 +2,8 @@ Gruntfile
 =========
 ##Ling 项目构建 Gruntfile 文件
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/wssgcg1213/Gruntfile.svg)](https://greenkeeper.io/)
+
 ##使用步骤
 - 1.安装npm以及node.js,http://www.nodejs.org/
 - 2.下载grunt-cli及grunt,http://www.gruntjs.net/docs/getting-started/
